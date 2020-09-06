@@ -1,3 +1,3 @@
-module github.com/romansalakhov/xsolla-garage-backend
+module github.com/IAlmostDeveloper/xsolla-garage-backend
 
 go 1.15
