@@ -16,9 +16,14 @@ func Handle(){
 	router := mux.NewRouter()
 
 	getRouter := router.Methods(http.MethodGet).Subrouter()
-	_ = router.Methods(http.MethodPost).Subrouter()
+	postRouter := router.Methods(http.MethodPost).Subrouter()
 
 	getRouter.HandleFunc("/", HelloWorld)
+
+	getRouter.HandleFunc("/task/{id:[0-9]+}", GetTask)
+	getRouter.HandleFunc("/task", GetTasks)
+
+	postRouter.HandleFunc("/task", CreateTask)
 
 
 	origins := handlers.AllowedOrigins([]string{"*"})
