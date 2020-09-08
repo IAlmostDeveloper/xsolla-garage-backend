@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/services"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
@@ -12,13 +15,22 @@ func HelloWorld(writer http.ResponseWriter, request *http.Request) {
 	writer.Write([]byte("Hello world"))
 }
 
+func CreateTask(writer http.ResponseWriter, request *http.Request) {
+	var task dto.Task
+	json.NewDecoder(request.Body).Decode(task)
+	services.CreateTask(task)
+	//TODO Make response
+}
+
 func Handle(){
 	router := mux.NewRouter()
 
 	getRouter := router.Methods(http.MethodGet).Subrouter()
-	_ = router.Methods(http.MethodPost).Subrouter()
+	postRouter := router.Methods(http.MethodPost).Subrouter()
 
 	getRouter.HandleFunc("/", HelloWorld)
+
+	postRouter.HandleFunc("/task", CreateTask)
 
 
 	origins := handlers.AllowedOrigins([]string{"*"})
