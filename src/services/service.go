@@ -1,13 +1,13 @@
 package services
 
 import (
-	"strconv"
-	"strings"
 	"github.com/gorilla/mux"
+	"net/http"
+	"strconv"
 )
 
-func GetIdFromPath(path string) int {
-	vars := mux.Vars(r)
+func GetIdFromPath(request *http.Request) int {
+	vars := mux.Vars(request)
 	id, _ := strconv.Atoi(vars["id"])
 	return id
 }

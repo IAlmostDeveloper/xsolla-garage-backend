@@ -21,7 +21,7 @@ func GetTasks(writer http.ResponseWriter, request *http.Request) {
 }
 
 func GetTask(writer http.ResponseWriter, request *http.Request) {
-	taskId := services.GetIdFromPath(request.URL.Path)
+	taskId := services.GetIdFromPath(request)
 	result := services.GetTask(taskId)
 	js, _ := json.Marshal(result)
 	writer.Write(js)
