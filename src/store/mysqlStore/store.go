@@ -16,7 +16,7 @@ func New(db *sqlx.DB) *Store {
 	}
 }
 
-func (store *Store) Task() interfaces.TaskRepositoryProvider {
+func (store *Store) TaskRepository() interfaces.TaskRepositoryProvider {
 	if store.taskRepository != nil {
 		return store.taskRepository
 	}
