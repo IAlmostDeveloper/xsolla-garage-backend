@@ -1,1 +1,1 @@
-dbConnection: "XsollaGarage:XsollaGarage@(localhost:3306)/XsollaGarage"
+dbConnection: "root:root@(mysql-db:3306)/XsollaGarage"
