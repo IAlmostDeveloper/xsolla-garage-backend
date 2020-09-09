@@ -8,26 +8,11 @@ services:
       - 8081:8081
   mysql-db:
     container_name: mysql-db
-    image: mysql:5.7
-    networks:
-            new:
-                aliases:
-                    - database
+    image: mysql:8.0
     ports:
-      - 3306
+            - 3306:3306
     restart: always
     #onrun: bash -c mysql -u root -D XsollaGarage -e migrations/1_initial_migration.up.sql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=XsollaGarage
-  migrate:
-        image: migrate/migrate
-        networks:
-            - new
-        volumes:
-            - /migrations
-        command: ["-path", "/migrations", "-database",  "mysql://root:root@database:3306/XsollaGarage", "up", "1"]
-        links: 
-            - mysql-db
-networks:
-  new:
