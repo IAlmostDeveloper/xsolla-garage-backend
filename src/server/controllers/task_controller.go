@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server/services"
+	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 func CreateTask(writer http.ResponseWriter, request *http.Request) {
@@ -27,7 +29,7 @@ func GetTasks(writer http.ResponseWriter, request *http.Request) {
 }
 
 func GetTask(writer http.ResponseWriter, request *http.Request) {
-	taskId := services.GetIdFromPath(request)
+	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
 	result, err := services.GetTask(taskId)
 	if err != nil{
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
