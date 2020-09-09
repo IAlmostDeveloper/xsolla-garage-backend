@@ -1,15 +1,30 @@
 package server
 
 import (
-	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server/controllers"
-	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server/services"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/controllers"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/services"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/store/interfaces"
+	"github.com/gorilla/mux"
+	"net/http"
 )
 
-func Start(config *services.Config) error{
-	err := services.Initialize(config)
-	if err != nil {
-		return err
+type server struct {
+	router         *mux.Router
+	store          interfaces.StoreProvider
+	taskController *controllers.TaskController
+}
+
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(w, r)
+}
+
+func NewServer(store interfaces.StoreProvider) *server {
+	server := &server{
+		router:         mux.NewRouter(),
+		store:          store,
+		taskController: controllers.NewTaskController(services.NewTaskService(store)),
 	}
-	err = controllers.Handle()
-	return err
+
+	server.ConfigureRouter()
+	return server
 }
