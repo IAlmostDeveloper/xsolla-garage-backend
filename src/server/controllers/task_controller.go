@@ -9,7 +9,7 @@ import (
 
 func CreateTask(writer http.ResponseWriter, request *http.Request) {
 	var task dto.Task
-	json.NewDecoder(request.Body).Decode(task)
+	json.NewDecoder(request.Body).Decode(&task)
 	err := services.CreateTask(&task)
 	if err != nil{
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
