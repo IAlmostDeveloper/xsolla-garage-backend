@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 )
 
@@ -12,7 +11,7 @@ func HelloWorld(writer http.ResponseWriter, request *http.Request) {
 	writer.Write([]byte("Hello world"))
 }
 
-func Handle(){
+func Handle() error {
 	router := mux.NewRouter()
 
 	getRouter := router.Methods(http.MethodGet).Subrouter()
@@ -33,5 +32,5 @@ func Handle(){
 	port := ":8081" // ":" + os.Getenv("PORT") // for env var $PORT
 	fmt.Println("Port " + port)
 
-	log.Fatal(http.ListenAndServe(port, handlers.CORS(headers, methods, origins)(router)))
+	return http.ListenAndServe(port, handlers.CORS(headers, methods, origins)(router))
 }
