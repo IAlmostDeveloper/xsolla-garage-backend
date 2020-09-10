@@ -1,4 +1,4 @@
-package mysqlStore
+package mysqlStorage
 
 import (
 	"fmt"

@@ -3,14 +3,13 @@ package main
 import (
 	"flag"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server"
-	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server/services"
 	"github.com/spf13/viper"
 	"log"
 )
 
-func main(){
+func main() {
 	flag.Parse()
-	config := &services.Config{}
+	config := &server.Config{}
 
 	viper.SetConfigName("configs")
 	viper.AddConfigPath("./configs")
