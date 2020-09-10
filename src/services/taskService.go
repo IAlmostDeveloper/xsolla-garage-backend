@@ -2,25 +2,25 @@ package services
 
 import (
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
-	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/store/interfaces"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/storage/interfaces"
 )
 
 type TaskService struct {
-	store interfaces.StoreProvider
+	storage interfaces.StorageProvider
 }
 
 func (s *TaskService) GetTaskByID(taskId int) (*dto.Task, error) {
-	return s.store.TaskRepository().GetByID(taskId)
+	return s.storage.TaskRepository().GetByID(taskId)
 }
 
-func NewTaskService(store interfaces.StoreProvider) *TaskService {
-	return &TaskService{store: store}
+func NewTaskService(storage interfaces.StorageProvider) *TaskService {
+	return &TaskService{storage: storage}
 }
 
 func (s *TaskService) CreateTask(task *dto.Task) error {
-	return s.store.TaskRepository().Create(task)
+	return s.storage.TaskRepository().Create(task)
 }
 
 func (s *TaskService) GetTasks() (*[]dto.Task, error) {
-	return s.store.TaskRepository().GetAll()
+	return s.storage.TaskRepository().GetAll()
 }

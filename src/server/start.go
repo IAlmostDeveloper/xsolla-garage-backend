@@ -2,7 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/store/mysqlStore"
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/storage/mysqlStorage"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"net/http"
 )
@@ -13,8 +14,8 @@ func Start(config *Config) error {
 		return err
 	}
 	defer db.Close()
-	store := mysqlStore.New(db)
-	server := NewServer(store)
+	storage := mysqlStorage.New(db)
+	server := NewServer(storage)
 
 	port := ":8081" // ":" + os.Getenv("PORT") // for env var $PORT
 	fmt.Println("Port " + port)
