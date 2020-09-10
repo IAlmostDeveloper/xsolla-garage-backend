@@ -7,4 +7,5 @@ type TaskRepositoryProvider interface {
 	GetByID(int) (*dto.Task, error)
 	GetAll() (*[]dto.Task, error)
 	RemoveByID(int) error
+	Update(*dto.Task) error
 }

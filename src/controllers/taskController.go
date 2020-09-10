@@ -59,3 +59,20 @@ func (controller *TaskController) RemoveTaskByID(writer http.ResponseWriter, req
 	}
 	respond(writer, request, http.StatusOK, nil)
 }
+
+func (controller *TaskController) UpdateTask(writer http.ResponseWriter, request *http.Request) {
+	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
+	var task dto.Task
+	json.NewDecoder(request.Body).Decode(&task)
+	task.Id = taskId
+	err := controller.taskService.Update(&task)
+	if err == sql.ErrNoRows {
+		errorRespond(writer, request, http.StatusNotFound, errNoChanges)
+		return
+	}
+	if err != nil {
+		errorRespond(writer, request, http.StatusInternalServerError, err)
+		return
+	}
+	respond(writer, request, http.StatusOK, task)
+}
