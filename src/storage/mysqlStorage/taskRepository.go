@@ -1,6 +1,7 @@
 package mysqlStorage
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/jmoiron/sqlx"
@@ -51,4 +52,36 @@ func (repo TaskRepository) GetAll() (*[]dto.Task, error) {
 		return nil, err
 	}
 	return tasks, err
+}
+
+func (repo TaskRepository) RemoveByID(id int) error {
+	removeStatement := "DELETE FROM `tasks` WHERE id = ?"
+	res, err := repo.db.Exec(removeStatement, id)
+	if err != nil {
+		return err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
+}
+
+func (repo TaskRepository) Update(task *dto.Task) error {
+	updateStatement := fmt.Sprintf("UPDATE `tasks` SET user_id = ?, title = ?, category = ?, text_content = ?, date_create = STR_TO_DATE(?, '%s'), date_close = STR_TO_DATE(?, '%s'), date_target = STR_TO_DATE(?, '%s'), is_completed = ? WHERE id = ?", DateFormat, DateFormat, DateFormat)
+	res, err := repo.db.Exec(updateStatement, task.UserId, task.Title, task.Category, task.TextContent, task.DateCreate, task.DateClose, task.DateTarget, task.IsCompleted, task.Id)
+	if err != nil {
+		return err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
 }
