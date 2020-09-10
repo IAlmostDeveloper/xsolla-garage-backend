@@ -24,3 +24,11 @@ func (s *TaskService) CreateTask(task *dto.Task) error {
 func (s *TaskService) GetTasks() (*[]dto.Task, error) {
 	return s.storage.TaskRepository().GetAll()
 }
+
+func (s *TaskService) RemoveByID(taskId int) error {
+	return s.storage.TaskRepository().RemoveByID(taskId)
+}
+
+func (s *TaskService) Update(task *dto.Task) error {
+	return s.storage.TaskRepository().Update(task)
+}
