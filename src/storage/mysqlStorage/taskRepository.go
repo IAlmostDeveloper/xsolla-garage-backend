@@ -1,6 +1,7 @@
 package mysqlStorage
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/jmoiron/sqlx"
@@ -51,4 +52,20 @@ func (repo TaskRepository) GetAll() (*[]dto.Task, error) {
 		return nil, err
 	}
 	return tasks, err
+}
+
+func (repo TaskRepository) RemoveByID(id int) error {
+	removeStatement := "DELETE FROM `tasks` WHERE id = ?"
+	res, err := repo.db.Exec(removeStatement, id)
+	if err != nil {
+		return err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
 }
