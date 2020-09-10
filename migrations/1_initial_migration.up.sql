@@ -56,7 +56,7 @@ CREATE TABLE `task_media` (
                               `media` blob
 );
 
-ALTER TABLE `tasks` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+# ALTER TABLE `tasks` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `subtasks` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
 

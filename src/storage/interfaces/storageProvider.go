@@ -1,5 +1,5 @@
 package interfaces
 
-type StoreProvider interface {
+type StorageProvider interface {
 	TaskRepository() TaskRepositoryProvider
 }
