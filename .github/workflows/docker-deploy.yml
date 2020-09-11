@@ -33,3 +33,4 @@ jobs:
           git --version
           git status
           docker build -t ialmostdeveloper/xsolla-garage-backend .
+          docker push ialmostdeveloper/xsolla-garage-backend
