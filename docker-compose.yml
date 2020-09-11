@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  garage-backend:
+    container_name: garage-backend
+    image: ialmostdeveloper/xsolla-garage-backend
+    ports:
+      - 8081:8081
+  garage-frontend:
+    container_name: garage-frontend
+    image: ialmostdeveloper/xsolla-garage-frontend
+    ports:
+      - 9000:9000
+  mysql-db:
+    container_name: mysql-db
+    image: mysql:8.0
+    ports:
+            - 3307:3306
+    restart: always
+    #onrun: bash -c mysql -u root -D XsollaGarage -e migrations/1_initial_migration.up.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=XsollaGarage
