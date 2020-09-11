@@ -25,3 +25,5 @@ jobs:
           docker --version
           git --version
           git status
+          docker run
+          docker build -t ialmostdeveloper/xsolla-garage-backend .
