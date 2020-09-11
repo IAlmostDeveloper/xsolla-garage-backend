@@ -1,5 +1,8 @@
+-- 00001_initial_migration.sql
+
+-- +goose Up
 USE XsollaGarage;
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
                          `id` int PRIMARY KEY auto_increment,
                          `name` varchar(255),
                          `email` varchar(255),
@@ -9,7 +12,7 @@ CREATE TABLE `users` (
                          `age` int
 );
 
-CREATE TABLE `tasks` (
+CREATE TABLE IF NOT EXISTS `tasks` (
                          `id` int PRIMARY KEY auto_increment,
                          `user_id` int,
                          `title` varchar(255),
@@ -21,7 +24,7 @@ CREATE TABLE `tasks` (
                          `is_completed` bool
 );
 
-CREATE TABLE `subtasks` (
+CREATE TABLE IF NOT EXISTS `subtasks` (
                             `id` int PRIMARY KEY auto_increment,
                             `task_id` int,
                             `depth` int,
@@ -34,7 +37,7 @@ CREATE TABLE `subtasks` (
                             `is_completed` bool
 );
 
-CREATE TABLE `notifications` (
+CREATE TABLE IF NOT EXISTS `notifications` (
                                  `id` int PRIMARY KEY auto_increment,
                                  `task_id` int,
                                  `text_content` varchar(255),
@@ -44,20 +47,18 @@ CREATE TABLE `notifications` (
                                  `partner` varchar(255)
 );
 
-CREATE TABLE `labels` (
+CREATE TABLE IF NOT EXISTS `labels` (
                           `id` int PRIMARY KEY auto_increment,
                           `task_id` int,
                           `name` varchar(255)
 );
 
-CREATE TABLE `task_media` (
+CREATE TABLE IF NOT EXISTS `task_media` (
                               `id` int PRIMARY KEY auto_increment,
                               `task_id` int,
                               `type` varchar(255),
                               `media` blob
 );
-
-# ALTER TABLE `tasks` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `subtasks` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
 
@@ -66,3 +67,12 @@ ALTER TABLE `notifications` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`
 ALTER TABLE `labels` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
 
 ALTER TABLE `task_media` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
+
+-- +goose Down
+drop table notifications;
+drop table task_media;
+drop table labels;
+drop table subtasks;
+drop table tasks;
+drop table users;
+
