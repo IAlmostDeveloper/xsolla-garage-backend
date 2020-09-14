@@ -3,10 +3,12 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"fmt"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/server"
 	"github.com/pressly/goose"
 	"github.com/spf13/viper"
 	"log"
+	"time"
 )
 
 func main() {
@@ -23,10 +25,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to decode config into struct, %v", err)
 	}
+	go func(){
+		for{
+			if err := migrate(config.DbConnection); err != nil {
+				fmt.Println("migration error: %s", err)
+				time.Sleep(time.Second * 5)
+			} else{
+				return
+			}
+		}
 
-	if err := migrate(config.DbConnection); err != nil {
-		log.Fatalf("migration error: %s", err)
-	}
+	}()
+
 
 	if err := server.Start(config); err != nil {
 		log.Fatal(err)
