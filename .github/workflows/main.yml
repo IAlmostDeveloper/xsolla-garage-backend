@@ -17,11 +17,11 @@ jobs:
       - name: Run ansible command
         run: |
             ansible --version
-            ls -a
+            ls -a /
             echo "$VM_SSH_KEY"
             echo "$VM_SSH_KEY" > key
             sudo chmod 600 key
-            ls -a
+            ls -a /
             ansible -i hosts.txt all -m shell -a "uptime"
         shell: bash
         env:
