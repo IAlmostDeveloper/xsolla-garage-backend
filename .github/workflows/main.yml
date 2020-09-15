@@ -1,0 +1,27 @@
+# This is a basic workflow to help you get started with Actions
+
+name: ansible
+
+on:
+  push:
+    branches: [ ansible-workflow ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+        
+      - name: Run ansible command
+        run: |
+            ansible --version
+            ls -a
+            echo ${{secrets.VM_SSH_KEY}} > key
+            chmod 400 key
+            ansible -i hosts.txt all -m shell -a "uptime"
