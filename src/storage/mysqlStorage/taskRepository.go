@@ -14,8 +14,8 @@ type TaskRepository struct {
 }
 
 func (repo TaskRepository) Create(task *dto.Task) error {
-	insertStatement := fmt.Sprintf("INSERT INTO tasks (user_id, title, category, text_content, date_create, date_target, is_completed) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%s'), STR_TO_DATE(?, '%s'), false)", DateFormat, DateFormat)
-	res, err := repo.db.Exec(insertStatement, task.UserId, task.Title, task.Category, task.TextContent, task.DateCreate, task.DateTarget)
+	insertStatement := fmt.Sprintf("INSERT INTO tasks (user_id, title, text_content, date_create, date_target, is_completed, is_important, is_urgent) VALUES (?, ?, ?, STR_TO_DATE(?, '%s'), STR_TO_DATE(?, '%s'), false, ?, ?)", DateFormat, DateFormat)
+	res, err := repo.db.Exec(insertStatement, task.UserId, task.Title, task.TextContent, task.DateCreate, task.DateTarget, task.IsImportant, task.IsUrgent)
 	if err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (repo TaskRepository) Create(task *dto.Task) error {
 
 func (repo TaskRepository) GetByID(id int) (*dto.Task, error) {
 	selectStatement := "SELECT " +
-		"id, user_id, title, category, text_content, date_create, date_close, date_target, is_completed " +
+		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +
 		"FROM tasks " +
 		"WHERE id = ?"
 	task := &dto.Task{}
@@ -44,7 +44,7 @@ func (repo TaskRepository) GetByID(id int) (*dto.Task, error) {
 
 func (repo TaskRepository) GetAll() (*[]dto.Task, error) {
 	selectStatement := "SELECT " +
-		"id, user_id, title, category, text_content, date_create, date_close, date_target, is_completed " +
+		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +
 		"FROM tasks"
 	tasks := &[]dto.Task{}
 	err := repo.db.Select(tasks, selectStatement)
@@ -71,8 +71,8 @@ func (repo TaskRepository) RemoveByID(id int) error {
 }
 
 func (repo TaskRepository) Update(task *dto.Task) error {
-	updateStatement := fmt.Sprintf("UPDATE `tasks` SET user_id = ?, title = ?, category = ?, text_content = ?, date_create = STR_TO_DATE(?, '%s'), date_close = STR_TO_DATE(?, '%s'), date_target = STR_TO_DATE(?, '%s'), is_completed = ? WHERE id = ?", DateFormat, DateFormat, DateFormat)
-	res, err := repo.db.Exec(updateStatement, task.UserId, task.Title, task.Category, task.TextContent, task.DateCreate, task.DateClose, task.DateTarget, task.IsCompleted, task.Id)
+	updateStatement := fmt.Sprintf("UPDATE `tasks` SET user_id = ?, title = ?, text_content = ?, date_create = STR_TO_DATE(?, '%s'), date_close = STR_TO_DATE(?, '%s'), date_target = STR_TO_DATE(?, '%s'), is_completed = ?, is_important = ?, is_urgent = ? WHERE id = ?", DateFormat, DateFormat, DateFormat)
+	res, err := repo.db.Exec(updateStatement, task.UserId, task.Title, task.TextContent, task.DateCreate, task.DateClose, task.DateTarget, task.IsCompleted, task.IsImportant, task.IsUrgent, task.Id)
 	if err != nil {
 		return err
 	}
