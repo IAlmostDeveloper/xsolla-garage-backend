@@ -1,26 +1,21 @@
-# This is a basic workflow to help you get started with Actions
-
 name: ansible
 
 on:
   push:
-    branches: [ ansible-workflow ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         
       - name: Run ansible command
         run: |
-            ansible --version
-            pwd
             echo "$VM_SSH_KEY" > key
             sudo chmod 600 key
-            ls -a /home/runner/work/xsolla-garage-backend/xsolla-garage-backend
             ansible -i hosts.txt all -m shell -a "./garage-deploy"
         shell: bash
         env:
