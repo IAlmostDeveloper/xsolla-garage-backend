@@ -20,4 +20,4 @@ jobs:
         
       - name: Run ansible command
         run: ansible --version
-            | ansible -i hosts.txt all -m shell "uptime"
+            | ansible -i hosts.txt all -m shell -a "uptime"
