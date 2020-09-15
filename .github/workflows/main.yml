@@ -22,6 +22,9 @@ jobs:
         run: |
             ansible --version
             ls -a
-            echo ${{secrets.VM_SSH_KEY}} > key
-            chmod 400 key
+            echo "$VM_SSH_KEY" > key
+            sudo chmod 400 key
             ansible -i hosts.txt all -m shell -a "uptime"
+        shell: bash
+        env:
+          VM_SSH_KEY: ${{secrets.VM_SSH_KEY}}
