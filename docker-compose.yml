@@ -6,6 +6,7 @@ services:
     image: ialmostdeveloper/xsolla-garage-backend
     ports:
       - 8081:8081
+    restart: always
   garage-frontend:
     container_name: garage-frontend
     image: ialmostdeveloper/xsolla-garage-frontend
