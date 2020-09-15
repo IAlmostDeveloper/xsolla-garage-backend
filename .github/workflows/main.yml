@@ -21,6 +21,7 @@ jobs:
       - name: Run ansible command
         run: |
             ansible --version
+            ls -a
             mkdir .ssh && cd .ssh
             echo ${{secrets.VM_SSH_KEY}} > key
             chmod 400 key
