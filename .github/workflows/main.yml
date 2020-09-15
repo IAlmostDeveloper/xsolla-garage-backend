@@ -20,4 +20,7 @@ jobs:
         
       - name: Run ansible command
         run: ansible --version
-            | ansible -i hosts.txt all -m shell -a "uptime"
+            | mkdir .ssh && cd .ssh
+            echo ${{secrets.VM_SSH_KEY}} > key
+            chmod 400 key
+            ansible -i hosts.txt all -m shell -a "uptime"
