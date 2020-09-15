@@ -9,4 +9,6 @@ type Task struct {
 	DateClose   *string `json:"date_close" db:"date_close"`
 	DateTarget  *string `json:"date_target" db:"date_target"`
 	IsCompleted bool    `json:"is_completed" db:"is_completed"`
+	IsImportant bool    `json:"is_important" db:"is_important"`
+	IsUrgent    bool    `json:"is_urgent" db:"is_urgent"`
 }
