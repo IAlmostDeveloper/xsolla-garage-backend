@@ -25,3 +25,4 @@ jobs:
         shell: bash
         env:
           VM_SSH_KEY: ${{secrets.VM_SSH_KEY}}
+          ANSIBLE_HOST_KEY_CHECKING: False
