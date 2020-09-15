@@ -21,7 +21,7 @@ jobs:
             echo "$VM_SSH_KEY"
             echo "$VM_SSH_KEY" > key
             sudo chmod 600 key
-            ls -a /
+            ls -a /home/runner
             ansible -i hosts.txt all -m shell -a "uptime"
         shell: bash
         env:
