@@ -23,7 +23,7 @@ jobs:
             ansible --version
             ls -a
             echo "$VM_SSH_KEY" > key
-            sudo chmod 400 key
+            sudo chmod 600 key
             ls -a
             ansible -i hosts.txt all -m shell -a "uptime"
         shell: bash
