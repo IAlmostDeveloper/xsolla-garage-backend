@@ -23,7 +23,7 @@ func (s *server) ConfigureRouter() {
 	putRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.UpdateTask)
 
 	origins := handlers.AllowedOrigins([]string{"*"})
-	methods := handlers.AllowedMethods([]string{"POST", "GET"})
+	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS"})
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 
 	s.router.Use(handlers.CORS(headers, methods, origins))
