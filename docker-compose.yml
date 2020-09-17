@@ -12,6 +12,11 @@ services:
     image: ialmostdeveloper/xsolla-garage-frontend
     ports:
       - 9000:9000
+  garage-ds:
+    container_name: garage-ds
+    image: ialmostdeveloper/xsolla-garage-ds
+    ports:
+      - 5000:5000
   mysql-db:
     container_name: mysql-db
     image: mysql:8.0
