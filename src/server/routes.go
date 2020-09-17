@@ -6,7 +6,12 @@ import (
 )
 
 func (s *server) ConfigureRouter() {
+	origins := handlers.AllowedOrigins([]string{"*"})
+	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS"})
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 
+	s.router.Use(handlers.CORS(headers, methods, origins))
+	
 	getRouter := s.router.Methods(http.MethodGet).Subrouter()
 	postRouter := s.router.Methods(http.MethodPost).Subrouter()
 	deleteRouter := s.router.Methods(http.MethodDelete).Subrouter()
@@ -21,12 +26,6 @@ func (s *server) ConfigureRouter() {
 	deleteRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.RemoveTaskByID)
 
 	putRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.UpdateTask)
-
-	origins := handlers.AllowedOrigins([]string{"*"})
-	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS"})
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-
-	s.router.Use(handlers.CORS(headers, methods, origins))
 }
 
 func HelloWorld(writer http.ResponseWriter, request *http.Request) {
