@@ -8,6 +8,19 @@ import (
 type Storage struct {
 	db             *sqlx.DB
 	taskRepository interfaces.TaskRepositoryProvider
+	tagRepository  interfaces.TagRepositoryProvider
+}
+
+func (storage *Storage) TagRepository() interfaces.TagRepositoryProvider {
+	if storage.tagRepository != nil {
+		return storage.tagRepository
+	}
+
+	storage.tagRepository = &TagRepository{
+		db: storage.db,
+	}
+
+	return storage.tagRepository
 }
 
 func New(db *sqlx.DB) *Storage {

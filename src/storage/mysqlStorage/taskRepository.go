@@ -42,16 +42,16 @@ func (repo TaskRepository) GetByID(id int) (*dto.Task, error) {
 	return task, err
 }
 
-func (repo TaskRepository) GetAll() (*[]dto.Task, error) {
+func (repo TaskRepository) GetAll() ([]*dto.Task, error) {
 	selectStatement := "SELECT " +
 		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +
 		"FROM tasks"
-	tasks := &[]dto.Task{}
+	tasks := &[]*dto.Task{}
 	err := repo.db.Select(tasks, selectStatement)
 	if err != nil {
 		return nil, err
 	}
-	return tasks, err
+	return *tasks, err
 }
 
 func (repo TaskRepository) RemoveByID(id int) error {
