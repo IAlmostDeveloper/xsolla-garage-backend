@@ -18,7 +18,6 @@ services:
     ports:
             - 3307:3306
     restart: always
-    #onrun: bash -c mysql -u root -D XsollaGarage -e migrations/1_initial_migration.up.sql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=XsollaGarage

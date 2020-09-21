@@ -45,12 +45,15 @@ func (controller *TagController) RemoveFromTask(writer http.ResponseWriter, requ
 		return
 	}
 
-	if err := controller.tagService.RemoveFromTask(reqBody.TaskId, reqBody.TagId); err == sql.ErrNoRows {
-		errorJsonRespond(writer, http.StatusNotFound, errNotFound)
-		return
-	} else if err != nil {
-		errorJsonRespond(writer, http.StatusInternalServerError, err)
-		return
+	if err := controller.tagService.RemoveFromTask(reqBody.TaskId, reqBody.TagId); err != nil{
+		if err == sql.ErrNoRows{
+			errorJsonRespond(writer, http.StatusNotFound, errNotFound)
+			return
+		} else{
+			errorJsonRespond(writer, http.StatusInternalServerError, err)
+			return
+		}
 	}
+
 	respondJson(writer, http.StatusOK, nil)
 }
