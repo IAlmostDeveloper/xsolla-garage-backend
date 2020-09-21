@@ -33,30 +33,31 @@ func (controller *TaskController) CreateTask(writer http.ResponseWriter, request
 }
 
 func (controller *TaskController) GetTasks(writer http.ResponseWriter, request *http.Request) {
-	if result, err := controller.taskService.GetTasks(); err != nil {
+	result, err := controller.taskService.GetTasks()
+	if err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
-	} else {
-		respondJson(writer, http.StatusOK, result)
 	}
+	respondJson(writer, http.StatusOK, result)
 }
 
 func (controller *TaskController) GetTaskByID(writer http.ResponseWriter, request *http.Request) {
 	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
-	if result, err := controller.taskService.GetTaskByID(taskId); err != nil {
+	result, err := controller.taskService.GetTaskByID(taskId)
+	if err != nil {
 		if err == sql.ErrNoRows {
 			errorJsonRespond(writer, http.StatusNotFound, errNoTask)
 			return
 		}
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
-	} else {
-		respondJson(writer, http.StatusOK, result)
 	}
+	respondJson(writer, http.StatusOK, result)
 }
 
 func (controller *TaskController) RemoveTaskByID(writer http.ResponseWriter, request *http.Request) {
 	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
+
 	if err := controller.taskService.RemoveByID(taskId); err != nil {
 		if err == sql.ErrNoRows {
 			errorJsonRespond(writer, http.StatusNotFound, errNoTask)

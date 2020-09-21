@@ -14,14 +14,15 @@ func NewTaskService(storage interfaces.StorageProvider) *TaskService {
 }
 
 func (s *TaskService) GetTaskByID(taskId int) (*dto.Task, error) {
-	if task, err := s.storage.TaskRepository().GetByID(taskId); err != nil {
+	task, err := s.storage.TaskRepository().GetByID(taskId)
+	if err != nil {
 		return nil, err
-	} else{
-		if task.Tags, err = s.storage.TagRepository().GetByTaskId(taskId) ; err != nil {
-			return nil, err
-		}
-		return task, nil
 	}
+	task.Tags, err = s.storage.TagRepository().GetByTaskId(taskId)
+	if err != nil {
+		return nil, err
+	}
+	return task, nil
 }
 
 func (s *TaskService) CreateTask(task *dto.Task) error {
@@ -37,17 +38,17 @@ func (s *TaskService) CreateTask(task *dto.Task) error {
 }
 
 func (s *TaskService) GetTasks() ([]*dto.Task, error) {
-	if tasks, err := s.storage.TaskRepository().GetAll() ; err != nil {
+	tasks, err := s.storage.TaskRepository().GetAll()
+	if err != nil {
 		return nil, err
-	} else {
-		for _, task := range tasks {
-			task.Tags, err = s.storage.TagRepository().GetByTaskId(task.Id)
-			if err != nil {
-				return nil, err
-			}
-		}
-		return tasks, nil
 	}
+	for _, task := range tasks {
+		task.Tags, err = s.storage.TagRepository().GetByTaskId(task.Id)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return tasks, nil
 }
 
 func (s *TaskService) RemoveByID(taskId int) error {

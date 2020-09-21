@@ -17,16 +17,17 @@ func Start(config *Config) error {
 	storage := mysqlStorage.New(db)
 	server := NewServer(storage)
 
-	port := ":8081"
+	port := ":8081" // ":" + os.Getenv("PORT") // for env var $PORT
 	fmt.Println("Port " + port)
 
 	return http.ListenAndServe(port, server.router)
 }
 
 func newDb(databaseURL string) (*sqlx.DB, error) {
-	if db, err := sqlx.Open("mysql", databaseURL) ; err != nil {
+	db, err := sqlx.Open("mysql", databaseURL)
+	if err != nil {
 		return nil, err
-	} else{
-		return db, nil
 	}
+
+	return db, nil
 }
