@@ -1,0 +1,4 @@
+
+[staging_servers]
+backend ansible_host=35.184.198.167 ansible_user=ooorollerbladerooo ansible_ssh_private_key_file=/home/runner/work/xsolla-garage-backend/xsolla-garage-backend/key
+

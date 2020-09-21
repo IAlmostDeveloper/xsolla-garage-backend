@@ -6,11 +6,16 @@ import (
 )
 
 func (s *server) ConfigureRouter() {
+	origins := handlers.AllowedOrigins([]string{"*"})
+	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS"})
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 
-	getRouter := s.router.Methods(http.MethodGet).Subrouter()
-	postRouter := s.router.Methods(http.MethodPost).Subrouter()
-	deleteRouter := s.router.Methods(http.MethodDelete).Subrouter()
-	putRouter := s.router.Methods(http.MethodPut).Subrouter()
+	s.router.Use(handlers.CORS(headers, methods, origins))
+
+	getRouter := s.router.Methods(http.MethodGet, http.MethodOptions).Subrouter()
+	postRouter := s.router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
+	deleteRouter := s.router.Methods(http.MethodDelete, http.MethodOptions).Subrouter()
+	putRouter := s.router.Methods(http.MethodPut, http.MethodOptions).Subrouter()
 
 	getRouter.HandleFunc("/", HelloWorld)
 	getRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.GetTaskByID)
@@ -23,12 +28,6 @@ func (s *server) ConfigureRouter() {
 	deleteRouter.HandleFunc("/tag", s.tagController.RemoveFromTask)
 
 	putRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.UpdateTask)
-
-	origins := handlers.AllowedOrigins([]string{"*"})
-	methods := handlers.AllowedMethods([]string{"POST", "GET"})
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-
-	s.router.Use(handlers.CORS(headers, methods, origins))
 }
 
 func HelloWorld(writer http.ResponseWriter, request *http.Request) {

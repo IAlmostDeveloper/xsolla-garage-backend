@@ -2,20 +2,17 @@ package mysqlStorage
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/jmoiron/sqlx"
 )
-
-const DateFormat = "%Y-%m-%d %H:%i:%s"
 
 type TaskRepository struct {
 	db *sqlx.DB
 }
 
 func (repo TaskRepository) Create(task *dto.Task) error {
-	insertStatement := fmt.Sprintf("INSERT INTO tasks (user_id, title, text_content, date_create, date_target, is_completed, is_important, is_urgent) VALUES (?, ?, ?, STR_TO_DATE(?, '%s'), STR_TO_DATE(?, '%s'), false, ?, ?)", DateFormat, DateFormat)
-	res, err := repo.db.Exec(insertStatement, task.UserId, task.Title, task.TextContent, task.DateCreate, task.DateTarget, task.IsImportant, task.IsUrgent)
+	insertStatement := "INSERT INTO tasks (user_id, title, text_content, date_create, date_target, is_completed, is_important, is_urgent) VALUES (:user_id, :title, :text_content, :date_create, :date_target, false, :is_important, :is_urgent)"
+	res, err := repo.db.NamedExec(insertStatement, task)
 	if err != nil {
 		return err
 	}
@@ -71,8 +68,8 @@ func (repo TaskRepository) RemoveByID(id int) error {
 }
 
 func (repo TaskRepository) Update(task *dto.Task) error {
-	updateStatement := fmt.Sprintf("UPDATE `tasks` SET user_id = ?, title = ?, text_content = ?, date_create = STR_TO_DATE(?, '%s'), date_close = STR_TO_DATE(?, '%s'), date_target = STR_TO_DATE(?, '%s'), is_completed = ?, is_important = ?, is_urgent = ? WHERE id = ?", DateFormat, DateFormat, DateFormat)
-	res, err := repo.db.Exec(updateStatement, task.UserId, task.Title, task.TextContent, task.DateCreate, task.DateClose, task.DateTarget, task.IsCompleted, task.IsImportant, task.IsUrgent, task.Id)
+	updateStatement := "UPDATE `tasks` SET user_id = :user_id, title = :title, text_content = :text_content, date_create = :date_create, date_close = :date_close, date_target = :date_target, is_completed = :is_completed, is_important = :is_important, is_urgent = :is_urgent WHERE id = :id"
+	res, err := repo.db.NamedExec(updateStatement, task)
 	if err != nil {
 		return err
 	}

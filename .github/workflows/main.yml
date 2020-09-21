@@ -1,0 +1,24 @@
+name: ansible
+  
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run ansible command
+        run: |
+            echo "$VM_SSH_KEY" > key
+            sudo chmod 600 key
+            ansible -i hosts.txt all -m shell -a "./garage-deploy"
+        shell: bash
+        env:
+          VM_SSH_KEY: ${{secrets.VM_SSH_KEY}}
+          ANSIBLE_HOST_KEY_CHECKING: False
+
