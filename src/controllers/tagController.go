@@ -26,8 +26,8 @@ func (controller *TagController) AddToTask(writer http.ResponseWriter, request *
 		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
 		return
 	}
-	err := controller.tagService.AddToTask(reqBody.TaskId, reqBody.Tags)
-	if err != nil {
+
+	if err := controller.tagService.AddToTask(reqBody.TaskId, reqBody.Tags); err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
 	}
@@ -44,8 +44,8 @@ func (controller *TagController) RemoveFromTask(writer http.ResponseWriter, requ
 		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
 		return
 	}
-	err := controller.tagService.RemoveFromTask(reqBody.TaskId, reqBody.TagId)
-	if err == sql.ErrNoRows {
+
+	if err := controller.tagService.RemoveFromTask(reqBody.TaskId, reqBody.TagId); err == sql.ErrNoRows {
 		errorJsonRespond(writer, http.StatusNotFound, errNotFound)
 		return
 	} else if err != nil {
