@@ -11,4 +11,5 @@ type Task struct {
 	IsCompleted bool      `json:"is_completed" db:"is_completed"`
 	IsImportant bool      `json:"is_important" db:"is_important"`
 	IsUrgent    bool      `json:"is_urgent" db:"is_urgent"`
+	Tags        []*Tag    `json:"tags"`
 }

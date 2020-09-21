@@ -20,9 +20,12 @@ func NewTaskController(taskService interfaces.TaskServiceProvider) *TaskControll
 
 func (controller *TaskController) CreateTask(writer http.ResponseWriter, request *http.Request) {
 	var task dto.Task
-	json.NewDecoder(request.Body).Decode(&task)
-	err := controller.taskService.CreateTask(&task)
-	if err != nil {
+	if err := json.NewDecoder(request.Body).Decode(&task); err != nil {
+		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
+		return
+	}
+
+	if err := controller.taskService.CreateTask(&task); err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
 	}
@@ -54,8 +57,8 @@ func (controller *TaskController) GetTaskByID(writer http.ResponseWriter, reques
 
 func (controller *TaskController) RemoveTaskByID(writer http.ResponseWriter, request *http.Request) {
 	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
-	err := controller.taskService.RemoveByID(taskId)
-	if err != nil {
+
+	if err := controller.taskService.RemoveByID(taskId); err != nil {
 		if err == sql.ErrNoRows {
 			errorJsonRespond(writer, http.StatusNotFound, errNoTask)
 			return
@@ -69,10 +72,12 @@ func (controller *TaskController) RemoveTaskByID(writer http.ResponseWriter, req
 func (controller *TaskController) UpdateTask(writer http.ResponseWriter, request *http.Request) {
 	taskId, _ := strconv.Atoi(mux.Vars(request)["id"])
 	var task dto.Task
-	json.NewDecoder(request.Body).Decode(&task)
+	if err := json.NewDecoder(request.Body).Decode(&task); err != nil {
+		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
+		return
+	}
 	task.Id = taskId
-	err := controller.taskService.Update(&task)
-	if err != nil {
+	if err := controller.taskService.Update(&task); err != nil {
 		if err == sql.ErrNoRows {
 			errorJsonRespond(writer, http.StatusNotFound, errNoTask)
 			return

@@ -22,8 +22,10 @@ func (s *server) ConfigureRouter() {
 	getRouter.HandleFunc("/task", s.taskController.GetTasks)
 
 	postRouter.HandleFunc("/task", s.taskController.CreateTask)
+	postRouter.HandleFunc("/tag", s.tagController.AddToTask)
 
 	deleteRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.RemoveTaskByID)
+	deleteRouter.HandleFunc("/tag", s.tagController.RemoveFromTask)
 
 	putRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.UpdateTask)
 }

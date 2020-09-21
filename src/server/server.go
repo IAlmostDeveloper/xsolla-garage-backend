@@ -12,6 +12,7 @@ type server struct {
 	router         *mux.Router
 	storage        interfaces.StorageProvider
 	taskController *controllers.TaskController
+	tagController  *controllers.TagController
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +24,7 @@ func NewServer(storage interfaces.StorageProvider) *server {
 		router:         mux.NewRouter(),
 		storage:        storage,
 		taskController: controllers.NewTaskController(services.NewTaskService(storage)),
+		tagController:  controllers.NewTagController(services.NewTagService(storage)),
 	}
 
 	server.ConfigureRouter()
