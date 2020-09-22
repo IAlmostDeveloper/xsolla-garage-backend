@@ -16,14 +16,13 @@ services:
     container_name: garage-ds
     image: ialmostdeveloper/xsolla-garage-ds
     ports:
-      - 5000:5000
+      - 127.0.0.1:5000:5000
   mysql-db:
     container_name: mysql-db
     image: mysql:8.0
     ports:
-            - 3307:3306
+      - 3307:3306
     restart: always
-    #onrun: bash -c mysql -u root -D XsollaGarage -e migrations/1_initial_migration.up.sql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=XsollaGarage
