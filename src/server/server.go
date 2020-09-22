@@ -23,7 +23,9 @@ func NewServer(storage interfaces.StorageProvider) *server {
 	server := &server{
 		router:         mux.NewRouter(),
 		storage:        storage,
-		taskController: controllers.NewTaskController(services.NewTaskService(storage)),
+		taskController: controllers.NewTaskController(
+			services.NewTaskService(storage),
+			services.NewValidationService()),
 		tagController:  controllers.NewTagController(services.NewTagService(storage)),
 	}
 

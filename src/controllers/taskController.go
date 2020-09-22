@@ -11,11 +11,12 @@ import (
 )
 
 type TaskController struct {
-	taskService interfaces.TaskServiceProvider
+	taskService       interfaces.TaskServiceProvider
+	validationService interfaces.ValidationServiceProvider
 }
 
-func NewTaskController(taskService interfaces.TaskServiceProvider) *TaskController {
-	return &TaskController{taskService}
+func NewTaskController(taskService interfaces.TaskServiceProvider, validationService interfaces.ValidationServiceProvider) *TaskController {
+	return &TaskController{taskService, validationService}
 }
 
 func (controller *TaskController) CreateTask(writer http.ResponseWriter, request *http.Request) {
@@ -24,7 +25,10 @@ func (controller *TaskController) CreateTask(writer http.ResponseWriter, request
 		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
 		return
 	}
-
+	if err := controller.validationService.ValidateTask(&task) ; err != nil{
+		errorJsonRespond(writer, http.StatusBadRequest, err)
+		return
+	}
 	if err := controller.taskService.CreateTask(&task); err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
@@ -74,6 +78,10 @@ func (controller *TaskController) UpdateTask(writer http.ResponseWriter, request
 	var task dto.Task
 	if err := json.NewDecoder(request.Body).Decode(&task); err != nil {
 		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
+		return
+	}
+	if err := controller.validationService.ValidateTask(&task) ; err != nil{
+		errorJsonRespond(writer, http.StatusBadRequest, err)
 		return
 	}
 	task.Id = taskId
