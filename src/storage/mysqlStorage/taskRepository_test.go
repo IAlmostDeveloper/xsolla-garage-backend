@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-var testingDbConnection = "root:root@(localhost:3306)/XsollaGarage"
+var testingDbConnection = "root:rootpassword@(localhost:3306)/XsollaGarage"
 
 var storage *Storage
 
