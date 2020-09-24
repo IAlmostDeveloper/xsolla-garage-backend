@@ -9,11 +9,15 @@ import (
 )
 
 type TagController struct {
-	tagService interfaces.TagServiceProvider
+	tagService        interfaces.TagServiceProvider
+	validationService interfaces.ValidationServiceProvider
 }
 
-func NewTagController(tagService interfaces.TagServiceProvider) *TagController {
-	return &TagController{tagService}
+func NewTagController(tagService interfaces.TagServiceProvider, validationService interfaces.ValidationServiceProvider) *TagController {
+	return &TagController{
+		tagService:        tagService,
+		validationService: validationService,
+	}
 }
 
 func (controller *TagController) AddToTask(writer http.ResponseWriter, request *http.Request) {
@@ -26,7 +30,10 @@ func (controller *TagController) AddToTask(writer http.ResponseWriter, request *
 		errorJsonRespond(writer, http.StatusBadRequest, errJsonDecode)
 		return
 	}
-
+	if err := controller.validationService.ValidateTags(reqBody.Tags); err != nil {
+		errorJsonRespond(writer, http.StatusBadRequest, err)
+		return
+	}
 	if err := controller.tagService.AddToTask(reqBody.TaskId, reqBody.Tags); err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
