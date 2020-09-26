@@ -46,11 +46,14 @@ func (v *ValidationService) validateTagSlice(value interface{}) error {
 	if !ok {
 		return errors.New("not a tag array")
 	}
+	for _, tag := range tags {
+		if err := v.ValidateTag(tag); err != nil {
+			return err
+		}
+	}
 	for i := 0; i < len(tags)-1; i++ {
 		for j := i + 1; j < len(tags); j++ {
-			if err := v.ValidateTag(tags[i]); err != nil {
-				return err
-			}
+
 			if strings.ToLower(strings.Trim(tags[i].Name, " ")) ==
 				strings.ToLower(strings.Trim(tags[j].Name, " ")) {
 				return errors.New("some tags are duplicated")
