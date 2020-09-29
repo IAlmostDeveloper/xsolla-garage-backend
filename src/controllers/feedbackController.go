@@ -5,6 +5,7 @@ import (
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/services/interfaces"
 	"net/http"
+	"time"
 )
 
 type FeedbackController struct {
@@ -26,6 +27,12 @@ func (controller *FeedbackController) AddFeedback(writer http.ResponseWriter, re
 		errorJsonRespond(writer, http.StatusBadRequest, err)
 		return
 	}
+	var timeNow dto.TimeJson
+	if err := timeNow.Scan(time.Now().Format(dto.DateFormat)) ; err != nil{
+		errorJsonRespond(writer, http.StatusInternalServerError, err)
+		return
+	}
+	feedback.DateCreate = timeNow
 	if err := controller.feedbackService.AddFeedback(&feedback); err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
