@@ -9,11 +9,12 @@ import (
 )
 
 type server struct {
-	router         *mux.Router
-	storage        interfaces.StorageProvider
-	taskController *controllers.TaskController
-	tagController  *controllers.TagController
-	authController *controllers.AuthController
+	router             *mux.Router
+	storage            interfaces.StorageProvider
+	taskController     *controllers.TaskController
+	tagController      *controllers.TagController
+	authController     *controllers.AuthController
+	feedbackController *controllers.FeedbackController
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -21,16 +22,18 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewServer(storage interfaces.StorageProvider) *server {
+	validationService := services.NewValidationService()
 	server := &server{
 		router:  mux.NewRouter(),
 		storage: storage,
 		taskController: controllers.NewTaskController(
 			services.NewTaskService(storage),
-			services.NewValidationService()),
+			validationService),
 		tagController: controllers.NewTagController(
 			services.NewTagService(storage),
-			services.NewValidationService()),
-			authController: controllers.NewAuthController(services.NewGoogleAuthService()),
+			validationService),
+		authController:     controllers.NewAuthController(services.NewGoogleAuthService()),
+		feedbackController: controllers.NewFeedbackController(services.NewFeedbackService(storage), validationService),
 	}
 
 	server.ConfigureRouter()
