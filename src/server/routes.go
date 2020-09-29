@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/gorilla/handlers"
 	"net/http"
 )
@@ -20,6 +21,8 @@ func (s *server) ConfigureRouter() {
 	getRouter.HandleFunc("/", HelloWorld)
 	getRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.GetTaskByID)
 	getRouter.HandleFunc("/task", s.taskController.GetTasks)
+	getRouter.HandleFunc("/google-auth", s.authController.GoogleLogin)
+	getRouter.HandleFunc("/google-callback", s.authController.GoogleCallback)
 
 	postRouter.HandleFunc("/task", s.taskController.CreateTask)
 	postRouter.HandleFunc("/tag", s.tagController.AddToTask)
@@ -31,5 +34,6 @@ func (s *server) ConfigureRouter() {
 }
 
 func HelloWorld(writer http.ResponseWriter, request *http.Request) {
-	writer.Write([]byte("Hello world"))
+	var html = `<html><body><a href="/google-auth">Hello world!</a></body></html>`
+	fmt.Fprint(writer,  html)
 }
