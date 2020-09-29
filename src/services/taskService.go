@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/storage/interfaces"
+	"strings"
 )
 
 type TaskService struct {
@@ -28,6 +29,9 @@ func (s *TaskService) GetTaskByID(taskId int) (*dto.Task, error) {
 func (s *TaskService) CreateTask(task *dto.Task) error {
 	if err := s.storage.TaskRepository().Create(task); err != nil {
 		return err
+	}
+	for _, tag := range task.Tags {
+		tag.Name = strings.ToLower(strings.Trim(tag.Name, " "))
 	}
 	for _, tag := range task.Tags {
 		if err := s.storage.TagRepository().AddToTask(task.Id, tag); err != nil {
