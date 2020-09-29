@@ -38,11 +38,12 @@ func (v *ValidationService) ValidateTag(tag *dto.Tag) error {
 	)
 }
 
-func (v *ValidationService) ValidateFeedback(feedback dto.Feedback) error {
+func (v *ValidationService) ValidateFeedback(feedback *dto.Feedback) error {
 	return validation.ValidateStruct(feedback,
 		validation.Field(&feedback.Content,
+			validation.NotNil,
 			validation.Required,
-			validation.By(v.validateStringRuneCount(1,1000))))
+			validation.By(v.validateStringPtrRuneCount(1,1000))))
 }
 
 func (v *ValidationService) validateStringPtrRuneCount(min int, max int) validation.RuleFunc {

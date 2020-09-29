@@ -23,12 +23,12 @@ func (controller *FeedbackController) AddFeedback(writer http.ResponseWriter, re
 		errorJsonRespond(writer, http.StatusBadRequest, err)
 		return
 	}
-	if err := controller.validationService.ValidateFeedback(feedback) ; err != nil{
+	if err := controller.validationService.ValidateFeedback(&feedback) ; err != nil{
 		errorJsonRespond(writer, http.StatusBadRequest, err)
 		return
 	}
 	var timeNow dto.TimeJson
-	if err := timeNow.Scan(time.Now().Format(dto.DateFormat)) ; err != nil{
+	if err := timeNow.Scan([]byte(time.Now().Format(dto.DateFormat))) ; err != nil{
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
 	}

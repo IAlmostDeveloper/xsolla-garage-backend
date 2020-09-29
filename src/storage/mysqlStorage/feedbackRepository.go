@@ -10,7 +10,7 @@ type FeedbackRepository struct{
 }
 
 func (repo *FeedbackRepository) AddFeedback(feedback *dto.Feedback) error {
-	insertStatement := "INSERT INTO feedback (date, content) VALUES (:date_create, :content)"
+	insertStatement := "INSERT INTO feedback (date_create, content) VALUES (:date_create, :content)"
 	res, err := repo.db.NamedExec(insertStatement, feedback)
 	if err != nil {
 		return err
