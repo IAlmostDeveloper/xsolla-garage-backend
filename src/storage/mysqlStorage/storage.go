@@ -9,6 +9,7 @@ type Storage struct {
 	db             *sqlx.DB
 	taskRepository interfaces.TaskRepositoryProvider
 	tagRepository  interfaces.TagRepositoryProvider
+	feedbackRepository interfaces.FeedbackRepositoryProvider
 }
 
 func (storage *Storage) TagRepository() interfaces.TagRepositoryProvider {
@@ -39,4 +40,16 @@ func (storage *Storage) TaskRepository() interfaces.TaskRepositoryProvider {
 	}
 
 	return storage.taskRepository
+}
+
+func (storage *Storage) FeedbackRepository() interfaces.FeedbackRepositoryProvider{
+	if storage.feedbackRepository != nil {
+		return storage.feedbackRepository
+	}
+
+	storage.feedbackRepository = &FeedbackRepository{
+		db: storage.db,
+	}
+
+	return storage.feedbackRepository
 }

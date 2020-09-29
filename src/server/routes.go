@@ -23,9 +23,11 @@ func (s *server) ConfigureRouter() {
 	getRouter.HandleFunc("/task", s.taskController.GetTasks)
 	getRouter.HandleFunc("/google-auth", s.authController.GoogleLogin)
 	getRouter.HandleFunc("/google-callback", s.authController.GoogleCallback)
+	getRouter.HandleFunc("/feedback", s.feedbackController.GetAllFeedback)
 
 	postRouter.HandleFunc("/task", s.taskController.CreateTask)
 	postRouter.HandleFunc("/tag", s.tagController.AddToTask)
+	postRouter.HandleFunc("/feedback", s.feedbackController.AddFeedback)
 
 	deleteRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.RemoveTaskByID)
 	deleteRouter.HandleFunc("/tag", s.tagController.RemoveFromTask)
