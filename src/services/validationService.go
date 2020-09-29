@@ -21,7 +21,7 @@ func (v *ValidationService) ValidateTask(task *dto.Task) error {
 		validation.Field(&task.Title,
 			validation.NotNil,
 			validation.Required,
-			validation.By(v.validateRuneCount(1, 100))),
+			validation.By(v.validateStringPtrRuneCount(1, 100))),
 		validation.Field(&task.DateTarget,
 			validation.Min(time.Now().AddDate(0, 0, -1))),
 		validation.Field(&task.Tags,
@@ -34,17 +34,31 @@ func (v *ValidationService) ValidateTag(tag *dto.Tag) error {
 	return validation.ValidateStruct(tag,
 		validation.Field(&tag.Name,
 			validation.Required,
-			validation.By(v.validateRuneCount(1, 100))),
+			validation.By(v.validateStringRuneCount(1, 30))),
 	)
 }
 
-func (v *ValidationService) validateRuneCount(min int, max int) validation.RuleFunc {
+func (v *ValidationService) validateStringPtrRuneCount(min int, max int) validation.RuleFunc {
 	return func(value interface{}) error {
 		stringPtr, ok := value.(*string)
 		if !ok {
 			return errors.New("not a string")
 		}
 		runeCount := len([]rune(*stringPtr))
+		if runeCount > max || runeCount < min {
+			return errors.New(fmt.Sprintf("the length must be between %d and %d.", min, max))
+		}
+		return nil
+	}
+}
+
+func (v *ValidationService) validateStringRuneCount(min int, max int) validation.RuleFunc {
+	return func(value interface{}) error {
+		string, ok := value.(string)
+		if !ok {
+			return errors.New("not a string")
+		}
+		runeCount := len([]rune(string))
 		if runeCount > max || runeCount < min {
 			return errors.New(fmt.Sprintf("the length must be between %d and %d.", min, max))
 		}
