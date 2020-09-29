@@ -2,7 +2,7 @@ package dto
 
 type Task struct {
 	Id          int       `json:"id" db:"id"`
-	UserId      int       `json:"user_id" db:"user_id"`
+	UserId      string    `json:"user_id" db:"user_id"`
 	Title       *string   `json:"title" db:"title"`
 	TextContent *string   `json:"text_content" db:"text_content"`
 	DateCreate  *TimeJson `json:"date_create" db:"date_create"`
