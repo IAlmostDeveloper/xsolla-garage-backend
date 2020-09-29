@@ -4,6 +4,9 @@ services:
   garage-backend:
     container_name: garage-backend
     image: ialmostdeveloper/xsolla-garage-backend
+    environment:
+      - GOOGLE_AUTH_CLIENT_ID=${GOOGLE_AUTH_CLIENT_ID}
+      - GOOGLE_AUTH_CLIENT_SECRET=${GOOGLE_AUTN_CLIENT_SECRET}
     ports:
       - 127.0.0.1:8081:8081
     restart: always
