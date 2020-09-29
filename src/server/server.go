@@ -13,6 +13,7 @@ type server struct {
 	storage        interfaces.StorageProvider
 	taskController *controllers.TaskController
 	tagController  *controllers.TagController
+	authController *controllers.AuthController
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -29,6 +30,7 @@ func NewServer(storage interfaces.StorageProvider) *server {
 		tagController: controllers.NewTagController(
 			services.NewTagService(storage),
 			services.NewValidationService()),
+			authController: controllers.NewAuthController(services.NewGoogleAuthService()),
 	}
 
 	server.ConfigureRouter()
