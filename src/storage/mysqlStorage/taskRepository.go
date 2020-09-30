@@ -39,6 +39,19 @@ func (repo TaskRepository) GetByID(id int) (*dto.Task, error) {
 	return task, err
 }
 
+func (repo TaskRepository) GetByUserID(userId string) ([]*dto.Task, error) {
+	selectStatement := "SELECT " +
+		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +
+		"FROM tasks" +
+		"WHERE `user_id` = ?"
+	tasks := &[]*dto.Task{}
+	err := repo.db.Select(tasks, selectStatement, userId)
+	if err != nil {
+		return nil, err
+	}
+	return *tasks, err
+}
+
 func (repo TaskRepository) GetAll() ([]*dto.Task, error) {
 	selectStatement := "SELECT " +
 		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +

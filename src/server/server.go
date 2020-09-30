@@ -31,8 +31,9 @@ func NewServer(storage interfaces.StorageProvider) *server {
 			validationService),
 		tagController: controllers.NewTagController(
 			services.NewTagService(storage),
-			validationService),
-		authController:     controllers.NewAuthController(services.NewGoogleAuthService()),
+			validationService,
+			services.NewTaskService(storage)),
+		authController:     controllers.NewAuthController(services.NewGoogleAuthService(storage)),
 		feedbackController: controllers.NewFeedbackController(services.NewFeedbackService(storage), validationService),
 	}
 
