@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
@@ -73,10 +74,6 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 		return
 	}
 
-	// at this point user exist in database
-	// next step is to set cookies with access and refresh token
-	// and somehow write them to jwt storage
-
 	accessToken, err := controller.googleAuthService.LoginUser(user)
 	if err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
@@ -97,4 +94,20 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 		return
 	}
 	fmt.Fprintf(writer, "Response: %s", content)
+}
+
+func (controller *AuthController) AuthenticationMW(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenCookie, err := r.Cookie("accessToken")
+		if err != nil {
+			errorJsonRespond(w, http.StatusUnauthorized, err)
+			return
+		}
+		userId, err := controller.googleAuthService.Authenticate(tokenCookie.Value)
+		if err != nil {
+			errorJsonRespond(w, http.StatusUnauthorized, err)
+			return
+		}
+		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), contextKeyId, userId)))
+	})
 }
