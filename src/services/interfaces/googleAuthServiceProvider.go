@@ -1,9 +1,13 @@
 package interfaces
 
-import "github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
+import (
+	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/dto"
+	"time"
+)
 
 type GoogleAuthServiceProvider interface {
-	Authenticate()
-	Register(user *dto.User) error
+	Authenticate(accessToken string) (string, error)
+	LoginUser(user *dto.User) (string, error)
 	ResolveUser(user *dto.User) error
+	GetAccessTokenTTL() time.Duration
 }

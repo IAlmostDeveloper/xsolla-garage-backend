@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 var (
@@ -75,6 +76,19 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 	// at this point user exist in database
 	// next step is to set cookies with access and refresh token
 	// and somehow write them to jwt storage
+
+	accessToken, err := controller.googleAuthService.LoginUser(user)
+	if err != nil {
+		errorJsonRespond(writer, http.StatusInternalServerError, err)
+		return
+	}
+
+	http.SetCookie(writer, &http.Cookie{
+		Name:       "accessToken",
+		Value:      accessToken,
+		Path:       "/",
+		RawExpires: time.Now().Add(controller.googleAuthService.GetAccessTokenTTL()).String(),
+	})
 
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

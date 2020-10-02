@@ -4,6 +4,7 @@ import (
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/controllers"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/services"
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/storage/interfaces"
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -21,7 +22,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-func NewServer(storage interfaces.StorageProvider) *server {
+func NewServer(storage interfaces.StorageProvider, redis *redis.Client) *server {
 	validationService := services.NewValidationService()
 	server := &server{
 		router:  mux.NewRouter(),
@@ -33,7 +34,7 @@ func NewServer(storage interfaces.StorageProvider) *server {
 			services.NewTagService(storage),
 			validationService,
 			services.NewTaskService(storage)),
-		authController:     controllers.NewAuthController(services.NewGoogleAuthService(storage)),
+		authController:     controllers.NewAuthController(services.NewGoogleAuthService(storage, redis)),
 		feedbackController: controllers.NewFeedbackController(services.NewFeedbackService(storage), validationService),
 	}
 
