@@ -6,8 +6,8 @@ import (
 )
 
 type GoogleAuthServiceProvider interface {
-	Authenticate(accessToken string) (string, error)
-	LoginUser(user *dto.User) (string, error)
+	Authorize(accessToken string) (string, error)
+	Authenticate(user *dto.User) (string, error)
 	ResolveUser(user *dto.User) error
 	GetAccessTokenTTL() time.Duration
 }

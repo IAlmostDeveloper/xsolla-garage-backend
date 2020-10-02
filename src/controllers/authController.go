@@ -74,7 +74,7 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 		return
 	}
 
-	accessToken, err := controller.googleAuthService.LoginUser(user)
+	accessToken, err := controller.googleAuthService.Authenticate(user)
 	if err != nil {
 		errorJsonRespond(writer, http.StatusInternalServerError, err)
 		return
@@ -96,14 +96,14 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 	fmt.Fprintf(writer, "Response: %s", content)
 }
 
-func (controller *AuthController) AuthenticationMW(next http.HandlerFunc) http.HandlerFunc {
+func (controller *AuthController) AuthorizationMW(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenCookie, err := r.Cookie("accessToken")
 		if err != nil {
 			errorJsonRespond(w, http.StatusUnauthorized, err)
 			return
 		}
-		userId, err := controller.googleAuthService.Authenticate(tokenCookie.Value)
+		userId, err := controller.googleAuthService.Authorize(tokenCookie.Value)
 		if err != nil {
 			errorJsonRespond(w, http.StatusUnauthorized, err)
 			return

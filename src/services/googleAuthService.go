@@ -31,7 +31,7 @@ func (s *GoogleAuthService) GetAccessTokenTTL() time.Duration {
 	return s.AccessTokenTTL
 }
 
-func (s *GoogleAuthService) Authenticate(accessToken string) (string, error) {
+func (s *GoogleAuthService) Authorize(accessToken string) (string, error) {
 	claims := jwt.MapClaims{}
 	if _, err := jwt.ParseWithClaims(accessToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.accessSecret), nil
@@ -66,7 +66,7 @@ func (s *GoogleAuthService) ResolveUser(user *dto.User) error {
 	return nil
 }
 
-func (s *GoogleAuthService) LoginUser(user *dto.User) (string, error) {
+func (s *GoogleAuthService) Authenticate(user *dto.User) (string, error) {
 	accessToken, err := s.createAccessToken(user)
 	if err != nil {
 		return "", err
