@@ -39,7 +39,10 @@ func (s *GoogleAuthService) Authenticate(accessToken string) (string, error) {
 		return "", err
 	}
 
-	if result := s.redis.Get(context.Background(), accessToken); result.Val() == claims["user_id"].(string) {
+	result := s.redis.Get(context.Background(), accessToken)
+	storedId := result.Val()
+	tokenId := claims["user_id"].(string)
+	if storedId != tokenId {
 		return "", errors.New("stored user id and token user id do not match")
 	}
 	return claims["user_id"].(string), nil

@@ -21,7 +21,7 @@ func (repo *UserRepository) Create(user *dto.User) error {
 
 // if user not found return nil
 func (repo *UserRepository) GetById(id string) (*dto.User, error) {
-	selectStatement := "SELECT * FROM `users` WHERE id = :id"
+	selectStatement := "SELECT * FROM `users` WHERE id = ?"
 	user := &dto.User{}
 	if err := repo.db.Get(user, selectStatement, id); err != nil {
 		if err == sql.ErrNoRows {
