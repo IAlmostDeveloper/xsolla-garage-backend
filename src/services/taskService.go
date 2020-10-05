@@ -41,8 +41,8 @@ func (s *TaskService) CreateTask(task *dto.Task) error {
 	return nil
 }
 
-func (s *TaskService) GetTasks() ([]*dto.Task, error) {
-	tasks, err := s.storage.TaskRepository().GetAll()
+func (s *TaskService) GetTasks(userId string) ([]*dto.Task, error) {
+	tasks, err := s.storage.TaskRepository().GetByUserID(userId)
 	if err != nil {
 		return nil, err
 	}

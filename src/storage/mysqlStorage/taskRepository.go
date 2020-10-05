@@ -39,6 +39,16 @@ func (repo TaskRepository) GetByID(id int) (*dto.Task, error) {
 	return task, err
 }
 
+func (repo TaskRepository) GetByUserID(userId string) ([]*dto.Task, error) {
+	selectStatement := "SELECT id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent FROM tasks WHERE user_id = ?"
+	tasks := &[]*dto.Task{}
+	err := repo.db.Select(tasks, selectStatement, userId)
+	if err != nil {
+		return nil, err
+	}
+	return *tasks, err
+}
+
 func (repo TaskRepository) GetAll() ([]*dto.Task, error) {
 	selectStatement := "SELECT " +
 		"id, user_id, title, text_content, date_create, date_close, date_target, is_completed, is_important, is_urgent " +
@@ -68,7 +78,7 @@ func (repo TaskRepository) RemoveByID(id int) error {
 }
 
 func (repo TaskRepository) Update(task *dto.Task) error {
-	updateStatement := "UPDATE `tasks` SET user_id = :user_id, title = :title, text_content = :text_content, date_create = :date_create, date_close = :date_close, date_target = :date_target, is_completed = :is_completed, is_important = :is_important, is_urgent = :is_urgent WHERE id = :id"
+	updateStatement := "UPDATE `tasks` SET title = :title, text_content = :text_content, date_create = :date_create, date_close = :date_close, date_target = :date_target, is_completed = :is_completed, is_important = :is_important, is_urgent = :is_urgent WHERE id = :id"
 	res, err := repo.db.NamedExec(updateStatement, task)
 	if err != nil {
 		return err

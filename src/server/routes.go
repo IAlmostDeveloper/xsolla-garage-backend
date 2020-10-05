@@ -19,23 +19,23 @@ func (s *server) ConfigureRouter() {
 	putRouter := s.router.Methods(http.MethodPut, http.MethodOptions).Subrouter()
 
 	getRouter.HandleFunc("/", HelloWorld)
-	getRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.GetTaskByID)
-	getRouter.HandleFunc("/task", s.taskController.GetTasks)
+	getRouter.HandleFunc("/task/{id:[0-9]+}", s.authController.AuthorizationMW(s.authController.AuthorizationMW(s.taskController.GetTaskByID)))
+	getRouter.HandleFunc("/task", s.authController.AuthorizationMW(s.taskController.GetTasks))
 	getRouter.HandleFunc("/google-auth", s.authController.GoogleLogin)
 	getRouter.HandleFunc("/google-callback", s.authController.GoogleCallback)
 	getRouter.HandleFunc("/feedback", s.feedbackController.GetAllFeedback)
 
-	postRouter.HandleFunc("/task", s.taskController.CreateTask)
-	postRouter.HandleFunc("/tag", s.tagController.AddToTask)
+	postRouter.HandleFunc("/task", s.authController.AuthorizationMW(s.taskController.CreateTask))
+	postRouter.HandleFunc("/tag", s.authController.AuthorizationMW(s.tagController.AddToTask))
 	postRouter.HandleFunc("/feedback", s.feedbackController.AddFeedback)
 
-	deleteRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.RemoveTaskByID)
-	deleteRouter.HandleFunc("/tag", s.tagController.RemoveFromTask)
+	deleteRouter.HandleFunc("/task/{id:[0-9]+}", s.authController.AuthorizationMW(s.taskController.RemoveTaskByID))
+	deleteRouter.HandleFunc("/tag", s.authController.AuthorizationMW(s.tagController.RemoveFromTask))
 
-	putRouter.HandleFunc("/task/{id:[0-9]+}", s.taskController.UpdateTask)
+	putRouter.HandleFunc("/task/{id:[0-9]+}", s.authController.AuthorizationMW(s.taskController.UpdateTask))
 }
 
 func HelloWorld(writer http.ResponseWriter, request *http.Request) {
 	var html = `<html><body><a href="/google-auth">Hello world!</a></body></html>`
-	fmt.Fprint(writer,  html)
+	fmt.Fprint(writer, html)
 }

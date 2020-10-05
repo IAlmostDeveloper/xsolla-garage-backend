@@ -1,1 +1,3 @@
 dbConnection: "root:root@(mysql-db:3306)/XsollaGarage"
+redisAddr: "redis-db:6379"
+redisPassword: ""
