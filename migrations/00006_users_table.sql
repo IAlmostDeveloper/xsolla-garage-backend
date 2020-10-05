@@ -5,7 +5,7 @@ USE XsollaGarage;
 
 ALTER TABLE `tasks` MODIFY COLUMN `user_id` varchar(50);
 
-CREATE TABLE `users`
+CREATE TABLE IF NOT EXISTS `users`
 (
     `id`          VARCHAR(50)  NOT NULL PRIMARY KEY ,
     `email`       VARCHAR(255) NOT NULL,
