@@ -8,7 +8,6 @@ import (
 	"github.com/IAlmostDeveloper/xsolla-garage-backend/src/services/interfaces"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -50,7 +49,6 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 		return
 	}
 	token, err := googleOauthConfig.Exchange(oauth2.NoContext, request.FormValue("code"))
-	fmt.Println(token.AccessToken)
 	if err != nil {
 		fmt.Printf("could not get token : %s \n", err.Error())
 		http.Redirect(writer, request, "/", http.StatusTemporaryRedirect)
@@ -87,13 +85,7 @@ func (controller *AuthController) GoogleCallback(writer http.ResponseWriter, req
 		RawExpires: time.Now().Add(controller.googleAuthService.GetAccessTokenTTL()).String(),
 	})
 
-	content, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("could not parse response : %s \n", err.Error())
-		http.Redirect(writer, request, "/", http.StatusTemporaryRedirect)
-		return
-	}
-	fmt.Fprintf(writer, "Response: %s", content)
+	http.Redirect(writer, request, "/", http.StatusTemporaryRedirect)
 }
 
 func (controller *AuthController) AuthorizationMW(next http.HandlerFunc) http.HandlerFunc {
