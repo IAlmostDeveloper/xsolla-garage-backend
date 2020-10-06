@@ -103,3 +103,14 @@ func (controller *AuthController) AuthorizationMW(next http.HandlerFunc) http.Ha
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), contextKeyId, userId)))
 	})
 }
+
+func (controller *AuthController) GetUser(writer http.ResponseWriter, request *http.Request) {
+	userId := request.Context().Value(contextKeyId).(string)
+	user, err := controller.googleAuthService.GetUser(userId)
+	if err != nil {
+		errorJsonRespond(writer, http.StatusInternalServerError, err)
+		return
+	}
+	respondJson(writer, http.StatusOK, user)
+	return
+}

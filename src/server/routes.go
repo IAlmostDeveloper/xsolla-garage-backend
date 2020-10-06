@@ -21,6 +21,7 @@ func (s *server) ConfigureRouter() {
 	getRouter.HandleFunc("/", HelloWorld)
 	getRouter.HandleFunc("/task/{id:[0-9]+}", s.authController.AuthorizationMW(s.authController.AuthorizationMW(s.taskController.GetTaskByID)))
 	getRouter.HandleFunc("/task", s.authController.AuthorizationMW(s.taskController.GetTasks))
+	getRouter.HandleFunc("/user", s.authController.AuthorizationMW(s.authController.GetUser))
 	getRouter.HandleFunc("/google-auth", s.authController.GoogleLogin)
 	getRouter.HandleFunc("/google-callback", s.authController.GoogleCallback)
 	getRouter.HandleFunc("/feedback", s.feedbackController.GetAllFeedback)
