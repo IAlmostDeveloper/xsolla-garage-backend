@@ -29,3 +29,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=XsollaGarage
+  redis:
+    container_name: redis-db
+    image: "redis:alpine"
+    ports: 
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf

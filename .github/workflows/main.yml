@@ -16,7 +16,7 @@ jobs:
         run: |
             echo "$VM_SSH_KEY" > key
             sudo chmod 600 key
-            ansible -i hosts.txt all -m shell -a "./garage-deploy"
+            ansible -i hosts.txt all -m shell -a "./garage-deploy-backend"
         shell: bash
         env:
           VM_SSH_KEY: ${{secrets.VM_SSH_KEY}}
